@@ -122,51 +122,15 @@ class Ip
 
     public function toXml()
     {
-        $region = [
-            'ip' => $this->region['ip'],
-            'inet' => $this->region['inet'],
-            'continent' => [
-                'value' => [
-                    'en' => $this->region['continent']['en'],
-                    'zh-cn' => $this->region['continent']['zh-cn'],
-                ],
-            ],
-            'country' => [
-                'value' => [
-                    'isoCode' => $this->region['country']['isoCode'],
-                    'en' => $this->region['country']['en'],
-                    'zh-cn' => $this->region['country']['zh-cn'],
-                ],
-            ],
-            'province' => [
-                'value' => [
-                    'isoCode' => $this->region['country']['isoCode'],
-                    'en' => $this->region['province']['en'],
-                    'zh-cn' => $this->region['province']['zh-cn'],
-                ],
-            ],
-            'city' => [
-                'value' => [
-                    'en' => $this->region['city']['en'],
-                    'zh-cn' => $this->region['city']['zh-cn'],
-                ],
-            ],
-            'location' => [
-                'value' => [
-                    'latitude' => $this->region['location']['latitude'],
-                    'longitude' => $this->region['location']['longitude'],
-                ],
-            ],
-            'traits' => [
-                'value' => [
-                    'ipAddress' => $this->region['traits']['ipAddress'],
-                    'network' => $this->region['traits']['network'],
-                ],
-            ],
-            'timeZone' => $this->region['timeZone'],
-            'isp' => $this->region['isp'],
-        ];
-        return (new xml())->convert($region, [
+        $this->region = array_merge($this->region, [
+            'continent' => ['value' => $this->region['continent']],
+            'country' => ['value' => $this->region['country']],
+            'province' => ['value' => $this->region['province']],
+            'city' => ['value' => $this->region['city']],
+            'location' => ['value' => $this->region['location']],
+            'traits' => ['value' => $this->region['traits']],
+        ]);
+        return (new xml())->convert($this->region, [
             'afterChild' => function ($xml, $child, $name, $params) {
                 return $child;
             },
