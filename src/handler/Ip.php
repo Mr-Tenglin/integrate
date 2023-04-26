@@ -82,7 +82,7 @@ class Ip
             $ip = $this->region['ip'];
         }
         $ipNum = [];
-        $ipArr = explode('.', $this->region['ip']);
+        $ipArr = explode('.', $ip);
         foreach ($ipArr as $num) {
             $ipHex = dechex((int) $num);
             if (strlen($ipHex) < 2) {
