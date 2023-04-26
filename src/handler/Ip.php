@@ -54,12 +54,12 @@ class Ip
             'location' => [
                 'latitude' => $record->location->latitude,
                 'longitude' => $record->location->longitude,
-                'timeZone' => $record->location->timeZone,
             ],
             'traits' => [
                 'ipAddress' => $record->traits->ipAddress,
                 'network' => $record->traits->network,
             ],
+            'timeZone' => $record->location->timeZone,
             'isp' => $isp,
         ];
     }
@@ -122,7 +122,55 @@ class Ip
 
     public function toXml()
     {
-        return (new xml())->convert($this->region);
+        $region = [
+            'ip' => $this->region['ip'],
+            'inet' => $this->region['inet'],
+            'continent' => [
+                'value' => [
+                    'en' => $this->region['continent']['en'],
+                    'zh-cn' => $this->region['continent']['zh-cn'],
+                ],
+            ],
+            'country' => [
+                'value' => [
+                    'isoCode' => $this->region['country']['isoCode'],
+                    'en' => $this->region['country']['en'],
+                    'zh-cn' => $this->region['country']['zh-cn'],
+                ],
+            ],
+            'province' => [
+                'value' => [
+                    'isoCode' => $this->region['country']['isoCode'],
+                    'en' => $this->region['province']['en'],
+                    'zh-cn' => $this->region['province']['zh-cn'],
+                ],
+            ],
+            'city' => [
+                'value' => [
+                    'en' => $this->region['city']['en'],
+                    'zh-cn' => $this->region['city']['zh-cn'],
+                ],
+            ],
+            'location' => [
+                'value' => [
+                    'latitude' => $this->region['location']['latitude'],
+                    'longitude' => $this->region['location']['longitude'],
+                ],
+            ],
+            'traits' => [
+                'value' => [
+                    'ipAddress' => $this->region['traits']['ipAddress'],
+                    'network' => $this->region['traits']['network'],
+                ],
+            ],
+            'timeZone' => $this->region['timeZone'],
+            'isp' => $this->region['isp'],
+        ];
+        return (new xml())->convert($region, [
+            'afterChild' => function ($xml, $child, $name, $params) {
+                return $child;
+            },
+        ]);
     }
 
     public function toArray()
