@@ -1,0 +1,24 @@
+{
+	"name": "tenglin/integrate",
+	"description": "Integrate the items needed for personal development",
+	"authors": [
+		{
+			"name": "Tenglin",
+			"email": "tenglin@ejcms.com",
+			"homepage": "https://github.com/Mr-Tenglin/integrate"
+		}
+	],
+	"require": {
+		"php": ">=7.3",
+		"chinayin/ip2region": "~2.0",
+		"geoip2/geoip2": "~2.0",
+		"overtrue/pinyin": "~4.0",
+		"scws/pscws4": "~1.0"
+	},
+	"require-dev": {
+		"darkfriend/php7-xml": "~2.0"
+	},
+	"autoload":{
+		"psr-4": {"tenglin\\integrate\\": "src/"}
+	}
+}
