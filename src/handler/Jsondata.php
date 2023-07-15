@@ -234,10 +234,29 @@ class Jsondata
         }
     }
 
+    public function insertAll($data)
+    {
+        try {
+            $ids = [];
+            $db = $this->rawQuery();
+            foreach ($data as $group) {
+                foreach ($group as $k => $v) {
+                    $db->{$k} = $v;
+                }
+                $db->save();
+                $ids[] = $db->lastId();
+            }
+            return $ids;
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
     public function update($data)
     {
         try {
             $db = $this->rawQuery();
+            $db->find();
             foreach ($data as $k => $v) {
                 $db->setField($k, $v);
             }
@@ -251,6 +270,7 @@ class Jsondata
     {
         try {
             $db = $this->rawQuery();
+            $db->find();
             return $db->delete();
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
