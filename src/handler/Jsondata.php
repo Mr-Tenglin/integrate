@@ -21,7 +21,9 @@ class Jsondata
 
     public function __construct($args = [])
     {
-        define('LAZER_DATA_PATH', $args[0]);
+        if (!empty($args[0])) {
+            define('LAZER_DATA_PATH', $args[0]);
+        }
     }
 
     public function createTable($data)
@@ -31,7 +33,6 @@ class Jsondata
                 dir_create(LAZER_DATA_PATH);
             }
             Lazer::create($this->tableName, $data);
-            $this->tableName = '';
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -41,7 +42,6 @@ class Jsondata
     {
         try {
             Lazer::remove($this->tableName);
-            $this->tableName = '';
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -51,7 +51,6 @@ class Jsondata
     {
         try {
             Validate::table($this->tableName)->exists();
-            $this->tableName = '';
             return true;
         } catch (Exception $e) {
             if ($boolean) {
@@ -179,21 +178,13 @@ class Jsondata
     public function find()
     {
         $db = $this->rawQuery();
-        if ($data = $db->find()->asArray()) {
-            return $data;
-        } else {
-            return false;
-        }
+        return $db->find()->asArray();
     }
 
     public function select(string $key = null, string $value = null)
     {
         $db = $this->rawQuery();
-        if ($data = $db->findAll()) {
-            return $data->asArray($key, $value);
-        } else {
-            return false;
-        }
+        return $db->findAll()->asArray($key, $value);
     }
 
     public function paginate($number, $offset = 0)
