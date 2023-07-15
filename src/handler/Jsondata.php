@@ -182,13 +182,17 @@ class Jsondata
     {
         $db = $this->rawQuery();
         if ($data = $db->find()->asArray()) {
-            return $data[0];
+            if (empty($data[0])) {
+                return $data;
+            } else {
+                return $data[0];
+            }
         } else {
             return [];
         }
     }
 
-    public function select(string $key = null, string $value = null)
+    public function select($key = null, $value = null)
     {
         $db = $this->rawQuery();
         if ($data = $db->findAll()) {
@@ -225,7 +229,7 @@ class Jsondata
         try {
             $db = $this->rawQuery();
             foreach ($data as $k => $v) {
-                $db->setField($k, $v);
+                $db->{$k} = $v;
             }
             $db->save();
             return $db->lastId();
@@ -258,7 +262,7 @@ class Jsondata
             $db = $this->rawQuery();
             $db->find();
             foreach ($data as $k => $v) {
-                $db->setField($k, $v);
+                $db->{$k} = $v;
             }
             return $db->save();
         } catch (Exception $e) {
