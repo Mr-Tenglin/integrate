@@ -20,12 +20,20 @@ class Keyword
     {
         $string = (!empty($args[0]) ? $args[0] : '');
         $length = (!empty($args[1]) ? (int) $args[1] : 10);
-        $PSCWS4_Content = Common::file_open(Common::vendor('/scws/pscws4/src/PSCWS4.php'));
-        if (strpos($PSCWS4_Content, '= create_function') !== false) {
-            $PSCWS4_Content = str_replace('= create_function', '= @create_function', $PSCWS4_Content);
-            Common::file_save(Common::vendor('/scws/pscws4/src/PSCWS4.php'), $PSCWS4_Content);
+        if (PHP_VERSION_ID > 80000) {
+            $PSCWS4_Content = file(Common::vendor('/scws/pscws4/src/PSCWS4.php'));
+            if (strpos(implode('', $PSCWS4_Content), '= create_function') !== false) {
+                $PSCWS4_Content[314] = '        $cmp_func = function($a, $b) { return ($b[\'weight\'] > $a[\'weight\'] ? 1 : -1); };' . PHP_EOL;
+                Common::file_save(Common::vendor('/scws/pscws4/src/PSCWS4.php'), implode('', $PSCWS4_Content));
+            }
+            $XDB_R_Content = file(Common::vendor('/scws/pscws4/src/XDB_R.php'));
+            if (strpos(implode('', $XDB_R_Content), 'var $version;') === false) {
+                $XDB_R_Content[36] = '    var $hash_prime = 0;' . PHP_EOL . '    var $version;' . PHP_EOL . '    var $fsize;' . PHP_EOL . '    var $_io_times;' . PHP_EOL;
+                Common::file_save(Common::vendor('/scws/pscws4/src/XDB_R.php'), implode('', $XDB_R_Content));
+            }
         }
-        $this->pscws = new PSCWS4; ("utf8");
+
+        $this->pscws = new PSCWS4('utf8');
         $this->pscws->set_dict(Common::vendor('/scws/pscws4/dict/dict.utf8.xdb'));
         $this->pscws->set_rule(Common::vendor('/scws/pscws4/etc/rules.ini'));
         $this->pscws->set_ignore(true);
